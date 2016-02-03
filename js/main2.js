@@ -5,6 +5,34 @@
 // var p2Model;
 // var particle;
 // var terrain;
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+var velocity;
+//multiple parsed input value times 3.14/180 for conversion to radians
+var theta;
+
+
+//interval between frames, intent is to be used later as a settimeout
+//refresh value between frame renders. experiment with number, aim for 60 fps?
+var interval = 100;
+
+var t = 0;
+
+//particle start positions for now
+var yInitial = 400;
+var x_n;
+var y_n;
+var xVelocity = (velocity * Math.cos(theta));
+
+
+
+
+
+
+
+
+
 
 // //BASICS. function dictates start screen to game.
 // function getNames(p1Name, p2Name) {
@@ -40,71 +68,21 @@
 //   this.data2= key4;
 // }
 
-// NOW we bring it all together
 
-var shot = {
-  xInitial: 100,
-  yInitial: 300,
-  velocity: 0.25,  // px/ms <- 250px/s
-  angle:    45  // degrees
-};
 
-function positionAtTime(timeElapsed) { // in ms!
-  return [
-    xCurrent(shot.xInitial, timeElapsed, shot.velocity, shot.angle),
-    yCurrent(shot.yInitial, timeElapsed, shot.velocity, shot.angle)
-  ];
-};
+function world() {
+  var canvas = document.getElementById('myCanvas');
+  var context = canvas.getContext("2d");
+  context.fillStyle = 'white';
+  context.fillRect(0, 0, canvas.width, canvas.height);
 
-var canvas = document.getElementById('myCanvas');
-var ctx = canvas.getContext("2d");
+  context.fillStyle = 'black';
+  context.fillRect(0, 400, canvas.width, 50);
 
-function drawCanvas() {
-  // clear it!
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // draw background
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // draw land
-  ctx.fillStyle = 'black';
-  ctx.fillRect(0, 400, canvas.width, 50);
+
 }
-
-
-function drawCircle(coordinates) {
-  ctx.beginPath();
-
-  ctx.arc(coordinates[0], coordinates[1], 8, 0, Math.PI*2);
-  ctx.closePath();
-
-  ctx.fillStyle = "indianred";
-  ctx.fill();
-}
-
-var time = 0;
-
-function renderShot() {
-  drawCanvas();
-  drawCircle(positionAtTime(time));
-  console.log("Look out below!!!");
-
-  time += 10;
-  if (positionAtTime(time)[1] < canvas.height) {
-    setTimeout(renderShot, 10);
-  }
-}
-
-function fireCanón(newShot) {
-  time = 0;
-  shot.xInitial = newShot.xInitial || shot.xInitial;
-  shot.yInitial = newShot.yInitial || shot.yInitial;
-  shot.velocity = newShot.velocity || shot.velocity;
-  shot.angle    = newShot.angle    || shot.angle;
-  renderShot();
-}
-
 
 function fire() {
     var canvas = document.getElementById('myCanvas');
@@ -121,9 +99,6 @@ function fire() {
     //interval between frames, intent is to be used later as a settimeout
     //refresh value between frame renders. experiment with number, aim for 60 fps?
     var interval = 100;
-
-
-
 
     var t = 0;
 
@@ -147,19 +122,24 @@ function fire() {
 
     //sooooo much of this was hardcoded just to work, i fear
     //that going further will require abandoning it all
+
     function render(ctx) {
 
       //time incremental increase
       t = t + 1;
+      console.log(t);
       //arbitrary constant -2.5 to keep velocity input guesses high
       velocity = velocity - 2.5;
 
       //Velocity of Y
       y_n = yInitial - (velocity * t * Math.sin(theta));
+      console.log(y_n);
       //simulate gravity on Y
       y_n = y_n + (t + (.3 * 9.8 * t));
+      console.log(y_n);
       //Constant velocity over time
       x_n = (x_n + xVelocity);
+      console.log(x_n);
 
 
       //if y bullet position underground release 'holds'
@@ -170,8 +150,84 @@ function fire() {
       }
       // draw projectile
       ctx.fillRect(x_n, y_n, 3, 3);
+
+
+      deltaX = x_n;
+      deltaY = y_n;
+
+
+
+
+
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// var deltaX = x_n;
+// var deltaY = y_n;
+
+
+
+// function Bullet(x, y) {
+//   this.x = x;
+//   this.y = y;
+// }
+
+// Bullet.prototype.paint = function(ctx) {
+//   //these are constant properties of every ball painted to the screen i guess
+//   this.x += deltaX;
+//   this.y += deltaY;
+
+//   //ctx just makes a new ball onto the canvas
+//   //radius being its radius
+//   ctx.fillStyle = 'black';
+//   ctx.fillRect(this.x,this.y, 3, 3);
+
+// }
+
+
+
+
+// var bullets = [];
+// bullets.push(new Bullet(50, 400));
+
+// requestAnimationFrame(function draw() {
+//     ctx.fillRect(0, 0, 10, 10);
+
+
+
+//   //for (var i = 0; i < balls.length; i++) {
+//     bullets[0].paint(ctx);
+//   //}
+//   requestAnimationFrame(draw);
+// });
+
+
+
 
 
 
@@ -179,3 +235,4 @@ function fire() {
 //$(function() {
 //world();
 //})
+
