@@ -1,10 +1,10 @@
-var p1Name;
-var p2Name;
-var angle;
-var p1Model;
-var p2Model;
-var particle;
-var terrain;
+// var p1Name;
+// var p2Name;
+// var angle;
+// var p1Model;
+// var p2Model;
+// var particle;
+// var terrain;
 
 // //BASICS. function dictates start screen to game.
 // function getNames(p1Name, p2Name) {
@@ -33,15 +33,31 @@ var terrain;
 // }
 // getAngle();
 
+// var Projectile = function(xpos,ypos,key3,key4) {
+//   this.xloc = xpos;
+//   this.yloc = ypos;
+//   this.data = key3;
+//   this.data2= key4;
+// }
+
+
 
 function world() {
-    var canvas = document.getElementById('myCanvas');
-    var context = canvas.getContext("2d");
-    context.rect(0, 400, canvas.width, canvas.height);
-    context.fillStyle = 'black';
-    context.strokeStyle = 'red';
-    context.fill();
-    context.stroke();
+  var canvas = document.getElementById('myCanvas');
+  var context = canvas.getContext("2d");
+  var whitebg = canvas.getContext("2d");
+  context.fillStyle = 'white';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  context.strokeStyle = 'green';
+  context.stroke();
+
+  context.fillStyle = 'black';
+  context.fillRect(0, 400, canvas.width, 50);
+
+
+
+
 }
 
 function fire() {
@@ -51,22 +67,19 @@ function fire() {
     var launchButton = document.getElementById('launchButton');
 
 
-
-
-
-
     var velocity = velocityInput.value;
     //multiple parsed input value times 3.14/180 for conversion to radians
     var theta = (angleInput.value) * (Math.PI/180);
+
+
     //interval between frames, intent is to be used later as a settimeout
     //refresh value between frame renders. experiment with number, aim for 60 fps?
     var interval = 100;
+
+
+
+
     var t = 0;
-
-
-
-
-
 
     //particle start positions for now
     var yInitial = 400;
@@ -75,47 +88,49 @@ function fire() {
     //Velocity of our object along the x axis.
     var xVelocity = (velocity * Math.cos(theta));
 
-    //gen bullet
+    //draw bullet
     var ctx = canvas.getContext("2d");
     ctx.fillStyle = 'black';
     launchButton.disabled = true;
 
+    //render my ctx(in this case, bullet) every 'interval'
     var refreshInterval = setInterval(function() {
-    render(ctx);
+      world();
+      render(ctx);
     }, interval);
 
-      //sooooo much of this was hardcoded just to work, i fear
-      //that going further will require abandoning it all
-      function render(ctx) {
+    //sooooo much of this was hardcoded just to work, i fear
+    //that going further will require abandoning it all
+    function render(ctx) {
 
-        //time incremental increase
-        t = t + 1;
-        //arbitrary constant -2.5 to keep velocity input guesses high
-        velocity = velocity - 2.5;
+      //time incremental increase
+      t = t + 1;
+      //arbitrary constant -2.5 to keep velocity input guesses high
+      velocity = velocity - 2.5;
 
-        //Velocity of Y
-        y_n = yInitial - (velocity * t * Math.sin(theta));
-        //simulate gravity on Y
-        y_n = y_n + (t + (.3 * 9.8 * t));
-        //Constant velocity over time
-        x_n = (x_n + xVelocity);
+      //Velocity of Y
+      y_n = yInitial - (velocity * t * Math.sin(theta));
+      //simulate gravity on Y
+      y_n = y_n + (t + (.3 * 9.8 * t));
+      //Constant velocity over time
+      x_n = (x_n + xVelocity);
 
-          //if y bullet position underground release 'holds'
-          if (y_n > yInitial) {
-            clearInterval(refreshInterval);
-            launchButton.disabled = false;
-            return;
-          }
-        // draw projectile
-        ctx.fillRect(x_n, y_n, 2, 2);
-        }
+
+      //if y bullet position underground release 'holds'
+      if (y_n > yInitial) {
+        clearInterval(refreshInterval);
+        launchButton.disabled = false;
+        return;
+      }
+      // draw projectile
+      ctx.fillRect(x_n, y_n, 3, 3);
+    }
 }
 
 
-$(function() {
-
-world();
 
 
-})
+//$(function() {
+//world();
+//})
 
