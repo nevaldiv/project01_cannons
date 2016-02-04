@@ -42,12 +42,41 @@
 
 // NOW we bring it all together
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var canvas = document.getElementById('myCanvas');
+var angleInput = document.getElementById('angle');
+var velocityInput = document.getElementById('velocity');
+var launchButton = document.getElementById('launchButton');
+var ctx = canvas.getContext("2d");
+
+
 var shot = {
   xInitial: 100,
   yInitial: 300,
   velocity: 0.25,  // px/ms <- 250px/s
   angle:    45  // degrees
 };
+
+var Pow = function(xinit,yinit,vel,angle) {
+  this.xInitial = xinit;
+  this.yInitial = yinit;
+  this.velocity = vel;
+  this.angle    = angle;
+}
+
 
 function positionAtTime(timeElapsed) { // in ms!
   return [
@@ -56,8 +85,6 @@ function positionAtTime(timeElapsed) { // in ms!
   ];
 };
 
-var canvas = document.getElementById('myCanvas');
-var ctx = canvas.getContext("2d");
 
 function drawCanvas() {
   // clear it!
@@ -76,10 +103,10 @@ function drawCanvas() {
 function drawCircle(coordinates) {
   ctx.beginPath();
 
-  ctx.arc(coordinates[0], coordinates[1], 8, 0, Math.PI*2);
+  ctx.arc(coordinates[0], coordinates[1], 4, 0, Math.PI*2);
   ctx.closePath();
 
-  ctx.fillStyle = "indianred";
+  ctx.fillStyle = "peach puff";
   ctx.fill();
 }
 
@@ -91,10 +118,19 @@ function renderShot() {
   console.log("Look out below!!!");
 
   time += 10;
-  if (positionAtTime(time)[1] < canvas.height) {
+  if (positionAtTime(time)[1] < 410) {
     setTimeout(renderShot, 10);
+  } else {
+    launchButton1.disabled = false;
+    launchButton2.disabled = false;
+
   }
 }
+
+
+
+
+
 
 function fireCanón(newShot) {
   time = 0;
@@ -102,11 +138,71 @@ function fireCanón(newShot) {
   shot.yInitial = newShot.yInitial || shot.yInitial;
   shot.velocity = newShot.velocity || shot.velocity;
   shot.angle    = newShot.angle    || shot.angle;
+
   renderShot();
 }
 
 
-function fire() {
+
+var bullet;
+//my fire function
+
+function p1fire() {
+var angleInput = document.getElementById('angle1');
+var velocityInput = document.getElementById('velocity1');
+var launchButton1 = document.getElementById('launchButton1');
+var vel = velocityInput.value;
+//multiple parsed input value times 3.14/180 for conversion to radians
+var theta = (angleInput.value)
+
+x = 50
+y = 400
+angle = theta;
+vel = vel/100
+var bullet = new Pow(x,y,vel,angle)
+fireCanón(bullet);
+launchButton1.disabled = true;
+launchButton2.disabled = true;
+}
+
+function p2fire() {
+var angleInput = document.getElementById('angle2');
+var velocityInput = document.getElementById('velocity2');
+var launchButton2 = document.getElementById('launchButton2');
+var vel = velocityInput.value;
+var adjVel = vel/100
+var theta = angleInput.value;
+var adjtheta = 180 - theta;  //mirrors the input angle across the the y axis
+x = 550
+y = 400
+// angle = theta;
+vel = vel/100
+var bullet = new Pow(x,y,adjVel,adjtheta)
+fireCanón(bullet);
+launchButton1.disabled = true;
+launchButton2.disabled = true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function fire0() {
     var canvas = document.getElementById('myCanvas');
     var angleInput = document.getElementById('angle');
     var velocityInput = document.getElementById('velocity');
@@ -118,13 +214,19 @@ function fire() {
     var theta = (angleInput.value) * (Math.PI/180);
 
 
+
+
+
+
+
+
+
+
+
+
     //interval between frames, intent is to be used later as a settimeout
     //refresh value between frame renders. experiment with number, aim for 60 fps?
     var interval = 100;
-
-
-
-
     var t = 0;
 
     //particle start positions for now

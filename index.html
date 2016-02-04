@@ -13,10 +13,23 @@
 
 <body>
     <h1>Canóns</h1>
-    <label>Angle <input type="text" id="angle"></label><br/>
-    <label>Velocity <input type="text" id="velocity"></label><br/>
-    <input type="button" id="launchButton" onclick="fire();" value="Player 1 Fire!">
-
+    <h3>(aka Gorilläs.bas)</h3>
+    <h5>(aka worms)</h5>
+    <h6>(aka scorched earth)</h6>
+    <div id="p1div">
+      <label>Angle <input type="text" id="angle1"></label><br/>
+      <label>Velocity <input type="text" id="velocity1"></label><br/>
+      <input type="button" id="launchButton1" onclick="p1fire();" value="Player 1 Fire!">
+    </div>
+    <div id="p2div">
+      <label><input type="text" id="angle2"> Angle</label><br/>
+      <label><input type="text" id="velocity2"> Velocity</label><br/>
+      <input type="button" id="launchButton2" onclick="p2fire();" value="Player 2 Fire!">
+    </div>
+    </br>
+    </br>
+    </br>
+    </br>
     <div style="border: solid 1px black; width:800px;">
         <canvas id="myCanvas" width="800" height="450"></canvas>
     </div>
