@@ -1,0 +1,27 @@
+head, h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+  font-family: sans-serif;
+  margin: 5px 5px 5px 5px;
+}
+
+#p1div {
+  max-width: 250px;
+  margin: 0 auto;
+  float: left;
+}
+#p2div {
+  max-width: 250px;
+  margin: 0 auto;
+  float: right;
+  padding-right: 10px;
+  text-align: right;
+}
+
+#guts {
+  max-width: 810px;
+  margin: 0 auto;
+}
+
+#elbottón {
+  be: useless;
+}
