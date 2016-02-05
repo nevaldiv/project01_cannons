@@ -360,6 +360,7 @@ function p1Winscreen(){
   ctx.translate(0,0);
   ctx.fillStyle = 'rgba(255,255,255,.3)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.translate(50,100);
   ctx.font = 'italic 40pt Calibri';
   ctx.fillText('Player 1 Wins!!!', 150, 100);
 
