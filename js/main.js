@@ -7,10 +7,12 @@ var angleInput = document.getElementById('angle');
 var velocityInput = document.getElementById('velocity');
 var launchButton = document.getElementById('launchButton');
 var ctx = canvas.getContext("2d");
+  var ctx2 = canvas.getContext("2d");
+
 
 
 //example structure for a shot object
-//included at top for testing fireCanón(shot);
+//included at top for console-model testing fireCanón(shot);
 var shot = {
   xInitial: 100,
   yInitial: 300,
@@ -48,7 +50,33 @@ function drawCanvas() {
 
   drawP1Tank();
   drawP2Tank();
+  buildRandWall(wallX);
+
 }
+
+function buildRandWall(x) {
+
+  ctx.save();
+  // var x = x;
+  var y = 0;
+  var ctx2 = canvas.getContext("2d");
+  ctx2.translate(0,150);
+  ctx2.strokeStyle = "#888";
+  ctx2.lineWidth = 2;
+  ctx2.strokeRect(x, 0, 15, 50);
+  ctx2.strokeRect(x, 50, 15, 50);
+  ctx2.strokeRect(x, 100, 15, 50);
+  ctx2.strokeRect(x, 150, 15, 50);
+  ctx2.strokeRect(x, 200, 15, 50);
+  ctx.restore();
+}
+
+
+var xroll = function getRandomInt(max, min) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+
 
 function drawP1Tank() {
 
@@ -90,8 +118,6 @@ function drawP1Tank() {
 
 }
 function drawP2Tank() {
-
-
   ctx.save();
   // translate context to center of canvas
   ctx.translate(canvas.width / 2, canvas.height / 2);
@@ -151,63 +177,55 @@ var time = 0;
 function renderShot() {
   drawCanvas();
   drawCircle(positionAtTime(time));
-  console.log("Look out below!!!");
+  console.log("Look out below!!!"); // Phil stuck this console log in here, and IMA KEEP IT.
   time += 10;
 
-
   if(checkPlayerHitByBullet(time) === true) {
-
-
     context2D = canvas.getContext("2d");
     var frameRate = 60.0;
     var frameDelay = 1000.0/frameRate;
     createExplosion(positionAtTime(time)[0], positionAtTime(time)[1], "#525252");
     createExplosion(positionAtTime(time)[0], positionAtTime(time)[1], "#FFA318");
 
+    /**** This Bit of Code below was jacked and modified to 'sort of work' from
+      online for purposes of adding an explosion sprite kinda thingy.
+      If youve any complaints with this, please accept this emoji as
+      my infinite shame and apologies. i am a disgrace   ＜(。_。)＞    *****/
 
     var loop = setInterval(function()
     {
       drawCanvas();
       update(frameDelay);
-
-      // console.log("how long does it go for");
-      // answer: approx 1500ms
+      // console.log("DEBUG TEST: how long does it go for?");
+      // answer: approx 1500ms. hmm. time to clear this mofo!
       }, 30);
     setTimeout(function() {
     checkPlayerHitByBullet(time);
     clearInterval(loop);
     }, 1500);
 
-
-    // var explo = function(){
-    //   var loop = setInterval(function(){
-    //       drawCanvas();
-    //       update(frameDelay);
-    //   }, frameDelay);
-    //   return setTimeout(function(){
-    //     clearInterval(loop);
-    //   }, 3000);
-    // };
-
-
-
-
-
-
-
+    /**** end of stolen space pirate crazy cool explosion disclaimer
+              ╭( ･ㅂ･)و   F YEAH, THAT WAS ONE DOPE ASS EXPLOSION    ****/
 
   } else {
-    if (positionAtTime(time)[1] < 410) {
-      setTimeout(renderShot, 10); //loop by calling self every 10ms if Pow above horizon
-    } else {
+    if(
+      (positionAtTime(time)[0] > wallX  && positionAtTime(time)[1] > 150)  &&
+      (positionAtTime(time)[0] < wallX+15  && positionAtTime(time)[1] < 400)
+      ){
       ticker +=1;
       whosTurnIsIt(ticker);
+    } else {
+       if(positionAtTime(time)[1] > 410) {
+         ticker +=1;
+         whosTurnIsIt(ticker);
+        } else {
+        setTimeout(renderShot, 10); //loop by calling self every 10ms if Pow above horizonboo
     }
   }
-}
+}}
 
 
-//phil put this function in, I opted for contructor
+//phil put this function in, I opted for a contructor
 //function "Pow" instead
 function fireCanón(newShot) {
   time = 0;
@@ -223,42 +241,38 @@ function fireCanón(newShot) {
 //my fire function
 
 function p1fire() {
-var angleInput = document.getElementById('angle1');
-var velocityInput = document.getElementById('velocity1');
-var launchButton1 = document.getElementById('launchButton1');
-var vel = velocityInput.value;
-//multiple parsed input value times 3.14/180 for conversion to radians
-var theta = (angleInput.value)
-
-x = 95
-y = 365
-angle = theta;
-vel = vel/100
-var bullet = new Pow(x,y,vel,angle)
-fireCanón(bullet);
-launchButton1.disabled = true;
-launchButton2.disabled = true;
+  var angleInput = document.getElementById('angle1');
+  var velocityInput = document.getElementById('velocity1');
+  var launchButton1 = document.getElementById('launchButton1');
+  var vel = velocityInput.value;
+  //multiple parsed input value times 3.14/180 for conversion to radians
+  var theta = (angleInput.value)
+  x = 95  // hardcode pixel nudge to fit the tank barrel
+  y = 365
+  angle = theta;
+  vel = vel/100  //for no other reason other than I want to put in big numbers into my input field
+  var bullet = new Pow(x,y,vel,angle)
+  fireCanón(bullet);
+  launchButton1.disabled = true;
+  launchButton2.disabled = true;
 }
 
 function p2fire() {
-var angleInput = document.getElementById('angle2');
-var velocityInput = document.getElementById('velocity2');
-var launchButton2 = document.getElementById('launchButton2');
-var vel = velocityInput.value;
-var adjVel = vel/100
-var theta = angleInput.value;
-var adjtheta = 180 - theta;  //mirrors the input angle across the the y axis
-x = 655
-y = 365
-// angle = theta;
-vel = vel/100
-var bullet = new Pow(x,y,adjVel,adjtheta)
-fireCanón(bullet);
-launchButton1.disabled = true;
-launchButton2.disabled = true;
+  var angleInput = document.getElementById('angle2');
+  var velocityInput = document.getElementById('velocity2');
+  var launchButton2 = document.getElementById('launchButton2');
+  var vel = velocityInput.value;
+  var adjVel = vel/100
+  var theta = angleInput.value;
+  var adjtheta = 180 - theta;  //mirrors the input angle across the the y axis
+  x = 655  // hardcode pixel nudge to fit the tank barrel
+  y = 365
+  vel = vel/100  //for no other reason other than I want to put in big numbers into my input field
+  var bullet = new Pow(x,y,adjVel,adjtheta)
+  fireCanón(bullet);
+  launchButton1.disabled = true;
+  launchButton2.disabled = true;
 }
-
-
 
 function whosTurnIsIt(count) {
 
@@ -273,35 +287,45 @@ function whosTurnIsIt(count) {
 
 }
 
-
-
-
-
-
 function checkPlayerHitByBullet(time) {
 //if bullet position is inside tank hitboxes,
 //add or subtract
-  if(
-      (positionAtTime(time)[0] > 664  && positionAtTime(time)[1] > 381)  &&
-      (positionAtTime(time)[0] < 697  && positionAtTime(time)[1] < 398)
-    ) {
+if(
+    (positionAtTime(time)[0] > 664  && positionAtTime(time)[1] > 381)  &&
+    (positionAtTime(time)[0] < 697  && positionAtTime(time)[1] < 398)
+  ) {
+    console.log("PLAYER 2 BEEN HIT!")
+    p1Wins();
+    return true;
+    }
+if(
+    (positionAtTime(time)[0] > 55  && positionAtTime(time)[1] > 381)  &&
+    (positionAtTime(time)[0] < 86  && positionAtTime(time)[1] < 398)
+  ) {
+    console.log("PLAYER 1 BEN BIT")
+    p2Wins();
+    return true;
+    }
 
-      console.log("PLAYER 2 BEEN HIT!")
-      p1Wins();
-      return true;
-      }
-  if(
-      (positionAtTime(time)[0] > 55  && positionAtTime(time)[1] > 381)  &&
-      (positionAtTime(time)[0] < 86  && positionAtTime(time)[1] < 398)
-    ) {
-
-      console.log("PLAYER 1 BEN BIT")
-      p2Wins();
-      return true;
-      }
-
-  return false;
+return false;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -319,10 +343,9 @@ function p2Wins(){
 
 function p1Winscreen(){
 
-  ctx.save();
-
   //tried not to repeat myself but the explosion animation was doing funky stuff
-  //clearning my screen at times i didnt care to investigate enough
+  //clearning my screen at times i didnt care to investigate enough, home stretch => hardcode it in.
+  ctx.save();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -338,7 +361,6 @@ function p1Winscreen(){
   ctx.fillStyle = 'rgba(255,255,255,.3)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.restore();
-
 }
 
 function p2Winscreen(){
@@ -360,6 +382,18 @@ function p2Winscreen(){
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
+//ghettoest 30 second reset game button clear board function
+clearFunction = function() {
+  document.location.href = '';
+}
+
+
+
+
+var wallX = xroll(275,475);
+drawCanvas();
+
+buildRandWall(wallX);
 
 
 
@@ -368,10 +402,10 @@ function p2Winscreen(){
 
 
 
-//need a function to detect collision
+
+//still need a function to detect collision
 // function collisionDetect(default) {
 
-// }
 
 
 // function playersStillAlive(empty) {
@@ -389,33 +423,25 @@ function p2Winscreen(){
 
 
 
-drawCanvas();
-
-
 
 
 //a commented out an event listener for determining 'hitbox' pixels on my canvas
 //that the ball has to cross to declare victory
 //(had to hardcode it a bit in that sense)
-// canvas.addEventListener("mousedown", getPosition, false);
+canvas.addEventListener("mousedown", getPosition, false);
 
-// function getPosition(event)
-// {
-//   var x = event.x;
-//   var y = event.y;
+function getPosition(event)
+{
+  var x = event.x;
+  var y = event.y;
 
-//   var canvas = document.getElementById("myCanvas");
+  var canvas = document.getElementById("myCanvas");
 
-//   x -= canvas.offsetLeft;
-//   y -= canvas.offsetTop;
+  x -= canvas.offsetLeft;
+  y -= canvas.offsetTop;
 
-//   alert("x:" + x + " y:" + y);
-// }
+  alert("x:" + x + " y:" + y);
+}
 
-
-
-//$(function() {
-//world();
-//})
 
 
