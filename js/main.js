@@ -8,6 +8,7 @@ var velocityInput = document.getElementById('velocity');
 var launchButton = document.getElementById('launchButton');
 var ctx = canvas.getContext("2d");
 
+
 //example structure for a shot object
 //included at top for testing fireCanón(shot);
 var shot = {
@@ -145,7 +146,7 @@ function drawCircle(coordinates) {
 }
 
 
-
+var loop;
 var time = 0;
 function renderShot() {
   drawCanvas();
@@ -155,7 +156,45 @@ function renderShot() {
 
 
   if(checkPlayerHitByBullet(time) === true) {
-        console.log("TEST");
+
+
+    context2D = canvas.getContext("2d");
+    var frameRate = 60.0;
+    var frameDelay = 1000.0/frameRate;
+    createExplosion(positionAtTime(time)[0], positionAtTime(time)[1], "#525252");
+    createExplosion(positionAtTime(time)[0], positionAtTime(time)[1], "#FFA318");
+
+
+    var loop = setInterval(function()
+    {
+      drawCanvas();
+      update(frameDelay);
+
+      // console.log("how long does it go for");
+      // answer: approx 1500ms
+      }, 30);
+    setTimeout(function() {
+    checkPlayerHitByBullet(time);
+    clearInterval(loop);
+    }, 1500);
+
+
+    // var explo = function(){
+    //   var loop = setInterval(function(){
+    //       drawCanvas();
+    //       update(frameDelay);
+    //   }, frameDelay);
+    //   return setTimeout(function(){
+    //     clearInterval(loop);
+    //   }, 3000);
+    // };
+
+
+
+
+
+
+
 
   } else {
     if (positionAtTime(time)[1] < 410) {
@@ -267,12 +306,67 @@ function checkPlayerHitByBullet(time) {
 
 
 function p1Wins(){
-  console.log("bullet entered p2 tank area");
+  console.log("p1Wins function called!");
+  p1Winscreen();
+
 }
 
 function p2Wins(){
-  console.log("bullet entered p1 tank area");
+  console.log("p2Wins function called!");
+  p2Winscreen();
 }
+
+
+function p1Winscreen(){
+
+  ctx.save();
+
+  //tried not to repeat myself but the explosion animation was doing funky stuff
+  //clearning my screen at times i didnt care to investigate enough
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 400, canvas.width, 50);
+  drawP1Tank();
+  var radius = 30;
+  ctx.beginPath();
+  ctx.arc(675,390, radius, 0, 1 * Math.PI, false);
+  ctx.fillStyle = 'white';
+  ctx.fill();
+  ctx.translate(0,0);
+  ctx.fillStyle = 'rgba(255,255,255,.3)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.restore();
+
+}
+
+function p2Winscreen(){
+
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 400, canvas.width, 50);
+  drawP2Tank();
+  var radius = 30;
+  ctx.beginPath();
+  ctx.arc(65,390, radius, 0, 1 * Math.PI, false);
+  ctx.fillStyle = 'white';
+  ctx.fill();
+  ctx.translate(0,0);
+  ctx.fillStyle = 'rgba(255,255,255,.3)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+
+
+
+
+
+
+
 
 //need a function to detect collision
 // function collisionDetect(default) {
